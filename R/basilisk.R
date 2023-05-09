@@ -165,8 +165,6 @@ deepspcas9_dependencies <- c("python==2.7",
                              "numpy==1.14.5")
 deepspcas9_dependencies_pip <- c("tensorflow==1.4.1")
 
-
-
 rs3_dependencies <- c("python==3.7.7",
                       "joblib==1.0.1",
                       "pandas==1.3.5",
@@ -177,7 +175,9 @@ rs3_dependencies <- c("python==3.7.7",
                       "requests==2.27.1")
 rs3_dependencies_pip <- c("sglearn==1.2.5")
 
-
+crista_dependencies <- c("python==3.6.8")
+crista_dependencies_pip <- c("numpy==1.13.1", 
+                             "sklearn==0.19.1")
 
 
 #' @importFrom basilisk BasiliskEnvironment
@@ -214,6 +214,12 @@ env_rs3 <- BasiliskEnvironment(envname="rs3__basilisk",
                                packages=rs3_dependencies,
                                channels = c("bioconda", "conda-forge"),
                                pip=rs3_dependencies_pip)
+                               
+env_crista <- BasiliskEnvironment(envname="crista__basilisk",
+                                  pkgname="crisprScore",
+                                  packages=crista_dependencies,
+                                  channels = c("bioconda", "conda-forge"),
+                                  pip=crista_dependencies_pip)
 
 if (.Platform$OS.type!="windows"){
     env_deephf <- BasiliskEnvironment(envname="deephf_basilisk",
