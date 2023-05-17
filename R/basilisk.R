@@ -177,7 +177,8 @@ rs3_dependencies_pip <- c("sglearn==1.2.5")
 
 crista_dependencies <- c("python==3.6.8")
 crista_dependencies_pip <- c("numpy==1.13.1", 
-                             "sklearn==0.19.1")
+                             "scikit-learn==0.18.1",
+                             "scipy==1.1.0")
 
 
 #' @importFrom basilisk BasiliskEnvironment
