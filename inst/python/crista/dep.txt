@@ -1,0 +1,7 @@
+crista_dependencies <- c("python==3.6.8")
+crista_dependencies_pip <- c("numpy==1.13.1", "sklearn==0.19.1")
+env_crista <- BasiliskEnvironment(envname="crista__basilisk",
+                               pkgname="crisprScore",
+                               packages=crista_dependencies,
+                               channels = c("bioconda", "conda-forge"),
+                               pip=crista_dependencies_pip)
