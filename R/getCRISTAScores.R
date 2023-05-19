@@ -17,14 +17,14 @@
 #' @importFrom basilisk basiliskStart basiliskStop basiliskRun
 
 
-getCRISTAScores <- function(protospacer, spacer){
-  protospacer <- .checkSequenceInputs(protospacer)
-  spacer <- .checkSequenceInputs(spacer)
-  if (unique(nchar(protospacer)) != 20) {
+getCRISTAScores <- function(protospacers, spacers){
+  protospacers <- .checkSequenceInputs(protospacers)
+  spacers <- .checkSequenceInputs(spacers)
+  if (unique(nchar(protospacers)) != 20) {
     stop("Protospacer must have length 20nt.")
   }
 
-  if (unique(nchar(spacer)) != 29) {
+  if (unique(nchar(spacers)) != 29) {
     stop("Spacer must have length 29nt ([3nt][20nt][NGG][3nt]).")
   }
   results <- basiliskRun(
@@ -32,14 +32,14 @@ getCRISTAScores <- function(protospacer, spacer){
     shared = FALSE,
     fork = FALSE,
     fun = .crista_python,
-    protospacer = protospacer,
-    spacer = spacer
+    protospacers = protospacers,
+    spacers = spacers
   )
   return(results)
 }
 
 #' @import crisprScoreData
-.crista_python <- function(protospacer, spacer){
+.crista_python <- function(protospacers, spacers){
   program <- system.file("python",
                          "crista",
                          "CRISTA.py",
@@ -49,12 +49,12 @@ getCRISTAScores <- function(protospacer, spacer){
                     "crista",
                     package="crisprScore")
   setwd(wd)
-  df <- data.frame(sequence=protospacer,
+  df <- data.frame(sequence=protospacers,
                    score=NA_real_,
                    stringsAsFactors=FALSE)
-  good <- !grepl("N", protospacer)
-  protospacer.valid <- protospacer[good]
-  good <- !grepl("N", spacer)
+  good <- !grepl("N", protospacers)
+  protospacer.valid <- protospacers[good]
+  good <- !grepl("N", spacers)
   spacer.valid <- spacer[good]
   if (length(protospacer.valid)>0){
     scores <- rep(NA_real_, length(protospacer.valid))
