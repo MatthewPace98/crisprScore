@@ -17,14 +17,15 @@
 #' @importFrom basilisk basiliskStart basiliskStop basiliskRun
 
 
-getCRISTAScores <- function(protospacers, spacers){
-  protospacers <- .checkSequenceInputs(protospacers)
-  spacers <- .checkSequenceInputs(spacers)
-  if (unique(nchar(protospacers)) != 20) {
+
+getCRISTAScores <- function(protospacer, spacer){
+  protospacer <- .checkSequenceInputs(protospacer)
+  protospacer <- .checkSequenceInputs(protospacer)
+  if (unique(nchar(protospacer)) != 20) {
     stop("Protospacer must have length 20nt.")
   }
-
-  if (unique(nchar(spacers)) != 29) {
+  
+  if (unique(nchar(spacer)) != 29) {
     stop("Spacer must have length 29nt ([3nt][20nt][NGG][3nt]).")
   }
   results <- basiliskRun(
@@ -32,29 +33,31 @@ getCRISTAScores <- function(protospacers, spacers){
     shared = FALSE,
     fork = FALSE,
     fun = .crista_python,
-    protospacers = protospacers,
-    spacers = spacers
+    protospacer = protospacer,
+    spacer = spacer
   )
   return(results)
 }
 
+
+#' @importFrom stringr str_extract
 #' @import crisprScoreData
-.crista_python <- function(protospacers, spacers){
+.crista_python <- function(protospacer, spacer){
   program <- system.file("python",
                          "crista",
                          "CRISTA.py",
                          package="crisprScore",
-                         mustWork=TRUE)
+                         mustWork=TRUE)  
   wd <- system.file("python",
                     "crista",
                     package="crisprScore")
   setwd(wd)
-  df <- data.frame(sequence=protospacers,
+  df <- data.frame(sequence=protospacer,
                    score=NA_real_,
                    stringsAsFactors=FALSE)
-  good <- !grepl("N", protospacers)
-  protospacer.valid <- protospacers[good]
-  good <- !grepl("N", spacers)
+  good <- !grepl("N", protospacer)
+  protospacer.valid <- protospacer[good]
+  good <- !grepl("N", spacer)
   spacer.valid <- spacer[good]
   if (length(protospacer.valid)>0){
     scores <- rep(NA_real_, length(protospacer.valid))
@@ -72,4 +75,19 @@ getCRISTAScores <- function(protospacers, spacers){
     df$score[good] <- scores
   }
   return(df)
+}
+
+.checkSequenceInputs <- function(sequences,
+                                 return.output=TRUE
+){
+  stopifnot(is.character(sequences))
+  len <- unique(nchar(sequences))
+  if (length(len)!=1){
+    stop("Provided sequences must all have identical length.")
+  }
+  if (return.output){
+    return(sequences)
+  } else {
+    return(invisible(TRUE))
+  }
 }
