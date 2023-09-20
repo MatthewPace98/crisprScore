@@ -20,7 +20,6 @@
 
 getCRISTAScores <- function(protospacer, spacer){
   protospacer <- .checkSequenceInputs(protospacer)
-  protospacer <- .checkSequenceInputs(protospacer)
   if (unique(nchar(protospacer)) != 20) {
     stop("Protospacer must have length 20nt.")
   }
